@@ -2,5 +2,30 @@
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
  
 }
+.flexdiv{
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
 
+}
+
+.display-state{
+  display: none;
+  background-color: #FB2576 ;
+}
+
+.nav{
+  background-color: #1C315E;
+}
+.forms{
+  background-color: #1C315E
+}
+.sections{
+  background-color: #1C315E ;
+}
+
+.header{
+  color: white;
+}
 

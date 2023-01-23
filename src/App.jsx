@@ -13,56 +13,65 @@ import {
 
 export default function App() {
   const initialList = [];
-
-  const [list, setList] = useState(initialList);
+  
+  // const [list, setList] = useState(initialList);
   const [baloon, setBaloon] = useState("");
-  const [counter, setCounter] = useState(0);
+  // const [winner, setWinner] = useState("");
+  // const [counter, setCounter] = useState(0);
+  const [displayBool, setDisplayBool] = useState(false);
+  const [balloons, setBalloons] = useState([  ]);
+  
+
+  if (balloons.length != 0) {
+    setTimeout(() => setDisplayBool(!displayBool), 5000);
+  }
 
   function handleChange(event) {
     setBaloon(event.target.value);
   }
 
   function handleAdd() {
+    const value = baloon;
 
-    let newList = list.concat({ baloon, counter: 0 });
-  
-    console.log(newList)
-    setList(newList);
-  }
-  // increase counter
-  // function increase(id) {
-  //   baloon[index].qty++;
-  //   setBaloon([...baloon])
-  //   setCounter(counter + 1);
-  //   console.log(counter)
-  // }
-  // const increase = (index) => {
-  //   baloon[index];
-  //   setBaloon([...baloon]);
-  //   setCounter(counter + 1);
-  //   console.log(counter)
-  // };
-  const increase = (index) => {
-    baloon[index];
-    setBaloon([...baloon])
-    setCounter(counter + 1);
-    console.log(index)
-    console.log([index].counter)
+    const result = balloons.find((item) => item.color === value);
+    if (!result) {
+      setBalloons([
+        ...balloons,
+        {
+          count: 1,
+          color: value,
+        },
+      ]);
+    } else {
+      setBalloons([
+        ...balloons.filter((item) => item.color !== value),
+        {
+          ...result,
+          count: result.count + 1,
+        },
+      ]);
+    }
   }
 
   return (
     <>
-      <Navbar bg="dark" variant="dark">
-        <Container>
-          <Navbar.Brand> Ballon Expects </Navbar.Brand>
+      <Navbar className="nav">
+        <Container className="header">
+          <Navbar.Brand style={{ color: "white" }}>
+            {" "}
+            Ballon Expects{" "}
+          </Navbar.Brand>
         </Container>
       </Navbar>
 
-      <Container>
-        <h2>fcgvhjbjknk</h2>
+      <Container
+        className="display-state"
+        style={{ display: displayBool ? "flex" : "none" }}
+      >
+        {balloons.length > 0 && <h2>{balloons[0].color} colour won</h2>}
       </Container>
 
-      <div Container="grid">
+      <div>
         <Row>
           <Col>
             <Card>
@@ -92,40 +101,99 @@ export default function App() {
 
               <hr
                 style={{
-                  background: "lime",
+                  background: "white",
                   height: "3px",
                 }}
               />
-            
-            {list.map((item, index) => (
+
+              {balloons.map((item, index) => (
+                <>
+                  <div className="flexdiv">
                     <Button
                       key={index}
                       //add colour to buttons using style attribute
-                      style={{ backgroundColor: item.baloon }}
-                      onClick={() => increase(index)}
-
+                      style={{
+                        backgroundColor: item.color,
+                        width: 250,
+                        color: item.color == "yellow" ? "black" : "white",
+                      }}
+                      onClick={() => increase()}
                     >
-                      {item.baloon} {counter}   
+                      {item.color} {item.count}
                     </Button>
-                  ))}
-                <Button variant="secondary" >
-                    <span>Buy</span>
-                  </Button>
-             
+                    <Button variant="secondary" onClick={() => handleAdd()}>
+                      <span>Buy</span>
+                    </Button>
+                  </div>
+                </>
+              ))}
             </Card>
           </Col>
 
           <Col>
             <Card>
-              <Row>
+              <Row className="sections">
                 <Col>
-                  <Card>Popular</Card>
+                  <Card>
+                    <h4> Upcoming</h4>
+                    <hr />
+                    {balloons
+                      .filter((item) => item.count >= 3 && item.count <= 4)
+                      .sort((a, b) => a.count - b.count)
+                      .map((item, index) => (
+                        <p
+                          key={index}
+                          style={{ color: item.color }}
+                          count={item.count}
+                        >
+                          {item.color}
+                        </p>
+                      ))}
+                    {/* {list.map((item, index) => (
+                      <>
+                        <p key={index} style={{ backgroundColor: item.baloon }}>
+                          {item.baloon}
+                        </p>
+                      </>
+                    ))} */}
+                  </Card>
                 </Col>
                 <Col>
-                  <Card>Trending</Card>
+                  <Card>
+                    <h4>Trending</h4>
+                    <hr />
+                    {balloons
+                      .filter((item) => item.count >= 11)
+                      .sort((a, b) => a.count - b.count)
+                      .slice(0, 3)
+                      .map((item, index) => (
+                        <p
+                          key={index}
+                          style={{ color: item.color }}
+                          count={item.count}
+                        >
+                          {item.color}
+                        </p>
+                      ))}
+                  </Card>
                 </Col>
                 <Col>
-                  <Card>Upcoming</Card>
+                  <Card>
+                    <h4>Popular</h4>
+                    <hr />
+                    {balloons
+                      .filter((item) => item.count >= 5 && item.count <= 10)
+                      .sort((a, b) => a.count - b.count)
+                      .map((item, index) => (
+                        <p
+                          key={index}
+                          style={{ color: item.color }}
+                          count={item.count}
+                        >
+                          {item.color}
+                        </p>
+                      ))}
+                  </Card>
                 </Col>
               </Row>
             </Card>
